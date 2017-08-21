@@ -1,72 +1,88 @@
-.subject {
-    text-overflow: hidden;
-    font-size: 1.5em;
-    color: darkslategray;
+
+
+.wa-landing {
+    margin: 5em;
+    background: white;
+    max-width: 980px;
+    margin: auto;
+    box-sizing: border-box;
 }
 
-.subject.rasp-truncated{
-    text-overflow: hidden;
-    font-size: 1.5em;
-    color: darkslategray;
+.wa-top-box{
+    display: flex;
 }
 
-.text {
-    font-size: 1em;
-    color: slategray;
-    white-space: pre-line;
+.wa-top-box.child-horizontal{
+    align-items: stretch;
+
 }
 
-.articles{
+.wa-intro-wrapper{
+    /* background-color: #f8f8f8; */
+    align-items: stretch;
+    height: 100%;
+}
+
+.wa-intro-logo {
+    padding: 1.5em;
+    position: absolute;
+    z-index: 1;
+}
+
+.wa-intro-image img{
     display: block;
+}
+
+.wa-top-line{
+    display: block;
+    margin: 0;
+}
+
+.wa-top-line h1{
+    vertical-align: middle;
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin: 0;
+}
+
+.wa-whys-boxes.childhorizontal{
+    vertical-align: top;
+    box-sizing: border-box;
+    padding-right: 0.5em;
+}
+
+.wa-whys-boxes.childhorizontal:last-child{
+    padding-right: 0;
+}
+
+.wa-why-stacks i{
+    color: #0070c0;
+}
+
+.wa-top-box.vertical{
+    display: block;
+}
+
+.wa-top-box.childvertical .wa-intro-logo{
+    width: 100%;
+    background-color: rgba(255,255,255,0.6);
+    top: 16%;
+}
+
+.wa-why-stacks.childhorizontal h2{
     padding-left: 1em;
 }
 
-.rasp-demo {
-    border: 1px solid black;
-    margin: 5em;
-    background: white;
+.wa-whys-boxes.vertical{
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
-/* From Accordion.css */
-.accordion {
-  overflow: hidden;
-  max-height: 0;
-  position: relative;
-
+.wa-top-box.childvertical .wa-intro-logo-bg{
+     display: none !important;
 }
 
-.accordion.expanding {
-    overflow: hidden;
-}
-
-.accordion.text.expanding {
-  overflow: visible;
-  overflow-y: hidden;
-}
-
-.accordion.expanded {
-    max-height: none;
-    /* overflow nothing */
-}
-
-.accordion.text.expanded {
-    max-height: none;
-    overflow: visible;
-}
-
-.accordion.collapsing {
-  overflow: hidden;
-}
-
-.accordion.text.collapsing {
-  overflow: visible;
-  overflow-y: hidden;
-}
-
-.accordion.collapsed {
-  overflow: hidden;
-}
-
-.accordion.text.collapsed {
-  overflow: hidden;
+.wa-why-stacks.childhorizontal:first-child {
+    max-width: 2em;
+    width: 2em;
 }
