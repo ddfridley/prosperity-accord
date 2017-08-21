@@ -5,7 +5,7 @@ app.set('port', (process.env.PORT || 5000));
 
 let dir=__dirname.split('\\');
 let initial=''; // because windows wants the absolute path to start with C:
-if(dir.length===1) { dir=__dirname.split('/'); initial='/'; }
+if(dir.length===1) { dir=__dirname.split('/'); initial='/'; while(!dir[0]) dir.shift() }
 console.info("dir:", dir);
 dir[dir.length-1]='dist';
 dir.push('demo');
