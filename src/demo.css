@@ -86,3 +86,40 @@
     max-width: 2em;
     width: 2em;
 }
+
+.wa-mailchimp-landscape{
+    width: 40%;
+    float: right;
+}
+
+.wa-mailchimp-portrait{
+    width: 100%;
+}
+
+.wa-mailchimp-portrat #mc_embed_signup{
+    font-size: 8px;
+}
+
+#mc_embed_signup_scroll input {
+    font-size: inherit;
+}
+
+#mc_embed_signup .mc-field-group input{
+    padding: 0.5em 0;
+}
+
+#mc_embed_signup .mc-field-group {
+    min-height: auto;
+}
+
+.wa-mailchimp-portrat p{
+    padding-left: 3em;
+}
+
+.wa-mailchimp-portrat h2{
+    padding-left: 1em;
+}
+
+.wa-mailchimp-portrat #mc_embed_signup form {
+    padding-top: 0;
+}

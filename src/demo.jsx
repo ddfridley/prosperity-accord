@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import {ReactActionStatePath, ReactActionStatePathClient} from 'react-action-state-path';
 import Accordion from 'react-proactive-accordion';
 import {Boxes, Stacks} from './react-responsive-boxes';
+import MailChimpForm from './mailchimp';
 
 class App extends React.Component {
     render(){
@@ -62,6 +63,14 @@ class App extends React.Component {
                         </div>
                     </Stacks>
                 </Boxes>
+                <div className={'wa-mailchimp-'+window.orientation}>
+                    <h2>Try the demo</h2>
+                    <p>no account info required</p>
+                    <MailChimpForm />
+                </div>
+                <div style={{clear: 'both'}}>
+                    <center>Copyright (c)2017 All rights reserved</center>
+                </div>
             </div>
         );
     }
