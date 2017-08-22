@@ -50,7 +50,7 @@ class App extends React.Component {
                             <h2>Manage your savings across many accounts</h2>
                             <p>You and your spouse have 401k's with your employers, IRA's with more than one brokerage, and maybe even a joint brokerage account. Easily choose the best funds and asset allocation given your choices, then see and manage your portfolio across all these accounts.</p>
                             <p>Many high priced wealth managers want all your money in their account.</p>
-                            <p>We think putting all your eggs in one basket is a risks strategy. </p>
+                            <p>We think putting all your eggs in one basket is a risky strategy. </p>
                         </div>
                     </Stacks>
                     <Stacks className="wa-why-stacks">
@@ -65,11 +65,11 @@ class App extends React.Component {
                 </Boxes>
                 <div className={'wa-mailchimp-'+window.orientation}>
                     <h2>Try the demo</h2>
-                    <p>no account info required</p>
+                    <p>No account info required.</p>
                     <MailChimpForm />
                 </div>
                 <div style={{clear: 'both'}}>
-                    <center>Copyright (c)2017 All rights reserved</center>
+                    <center>Copyright &copy;2017 All rights reserved</center>
                 </div>
             </div>
         );
