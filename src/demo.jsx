@@ -40,12 +40,12 @@ class App extends React.Component {
                         <div>
                             <h2>See how you are really doing</h2>
                             <p>Whether the market is up or down, today, this week, this month, or this year see how your whole portfolio, across all your accounts, is doing compared to benchmarks.</p>
-                            <p>Many high priced wealth manages give you a number, but they don't tell you if that's better or worse than someone else.</p>
-                            <p>We want to know, and show you, how were doing compared to other choices.</p>
-                        </div>
+                            <p>Many high priced wealth managers give you a number, but they don't tell you if that's better or worse than someone else.</p>
+                            <p>We want to know, and show you, how we're doing compared to other choices.</p>
+                    </div>      
                     </Stacks>
                     <Stacks className="wa-why-stacks">
-                        <i className="fa fa-sliders fa-2x" />
+                        <i className="fa fa-sliders fa-2x"/>
                         <div>
                             <h2>Manage your savings across many accounts</h2>
                             <p>You and your spouse have 401k's with your employers, IRA's with more than one brokerage, and maybe even a joint brokerage account. Easily choose the best funds and asset allocation given your choices, then see and manage your portfolio across all these accounts.</p>
