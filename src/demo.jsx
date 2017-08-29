@@ -6,6 +6,10 @@ import {ReactActionStatePath, ReactActionStatePathClient} from 'react-action-sta
 import Accordion from 'react-proactive-accordion';
 import {Boxes, Stacks} from './react-responsive-boxes';
 import MailChimpForm from './mailchimp';
+import portfolio from '../assets/data/accord.json';
+import ReactTable from 'react-table';
+//import ReactTableStyle from 'react-table/react-table.css';
+import ShowPortfolio from './show-portfolio';
 
 class App extends React.Component {
     render(){
@@ -17,6 +21,36 @@ class App extends React.Component {
         // in this demo '?' is used to separate the file name from the rest of the URL because when you are opening demo.html on a file system, and the file system does not like demo.html/anything
         // but demo.html? works, and so does demo.html?/
         // if you are strictly serving from a server, the ? is not required
+
+        // gernerate headers for ReactTable
+        var headers=[];
+        portfolio.columns.forEach(c=>{
+            headers.push({
+                id: c,
+                Header: c,
+                accessor: d=>(typeof d[c]!=='undefined' && d[c] !== null) ? d[c].toLocaleString(navigator.language,portfolio.formats[c] ? portfolio.formats[c].options : {}) : '',
+            })
+        });
+        portfolio.headers=headers;
+
+        // enumerate the lines for ReactTable
+        var lines=[];
+        lines.push(portfolio.summary);
+        portfolio.rows.forEach(r=>lines.push(portfolio.a[r]));
+        portfolio.lines=lines;
+
+        // add react table's style
+        //var head = document.head || document.getElementsByTagName('head')[0],
+        //style = document.createElement('style');
+        //style.type = 'text/css';
+        //if (style.styleSheet){
+        //style.styleSheet.cssText = ReactTableStyle;
+        //} else {
+        //style.appendChild(document.createTextNode(ReactTableStyle));
+        //}
+      
+        //head.appendChild(style);
+
         return (
             <div className="wa-landing">
                 <Boxes className='wa-top-box'>
@@ -69,6 +103,9 @@ class App extends React.Component {
                     <MailChimpForm />
                 </div>
                 <div style={{clear: 'both'}}>
+                    <ShowPortfolio portfolio={portfolio} />
+                </div>
+                <div >
                     <center>Copyright &copy;2017 All rights reserved</center>
                 </div>
             </div>

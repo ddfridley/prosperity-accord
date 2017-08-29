@@ -123,3 +123,49 @@
 .wa-mailchimp-portrat #mc_embed_signup form {
     padding-top: 0;
 }
+
+.wa-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    box-sizing: border-box;
+}
+
+.wa-table td {
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.wa-table tr {
+    margin: 0;
+    padding: 0;
+    transition: all linear 0.5s;
+    box-sizing: border-box;
+}
+
+.wa-table th {
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: all linear 0.5s;
+    box-sizing: border-box;
+}
+
+.wa-table-header-cell{
+    padding-left: .2em;
+    padding-right: .2em;
+    text-align: center;
+}   
+
+.wa-table-row-cell {
+    padding-left: .2em;
+    padding-right: .2em;
+}
+

@@ -22,7 +22,9 @@
     "react": "^15.6.1",
     "react-action-state-path": "github:ddfridley/react-action-state-path",
     "react-dom": "^15.6.1",
-    "react-proactive-accordion": "github:ddfridley/react-proactive-accordion"
+    "react-proactive-accordion": "github:ddfridley/react-proactive-accordion",
+    "react-table": "^6.5.3",
+    "string": "^3.3.3"
   },
   "engines": {
     "npm": "5.0.3"
