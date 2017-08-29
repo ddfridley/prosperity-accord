@@ -3,17 +3,87 @@
 import React from 'react';
 import ClassNames          from 'classnames';
 import S from 'string';
+import {ReactActionStatePath, ReactActionStatePathClient} from 'react-action-state-path';
+
 
 export class ShowPortfolio extends React.Component {
-    state={shape: 'all', headerWidths: []};
+    render() {
+        return (
+        <ReactActionStatePath {...this.props}>
+            <RASPShowPortfolio />
+        </ReactActionStatePath>
+        )
+    }
+}
+
+class RASPShowPortfolio extends ReactActionStatePathClient {
+    state={headerWidths: []};
 
     constructor(props){
-        super(props);
-        ShowPortfolio.tableShape.all={};
-        this.props.portfolio.columns.forEach(c=>ShowPortfolio.tableShape.all[c]=true);
+        super(props,'key',1);
         this.props.portfolio.columns=this.props.portfolio.columns.filter(c=>c!=='assetClass');
         this.props.portfolio.columns.unshift('assetClass');
+        this.title = 'portfolio'; 
+        this.props.rasp.toParent({ type: "SET_TITLE", title: this.title }); // used in debug messages
     };
+
+    segmentToState(action,initialRASP){
+        // if an article is open, the article id is the path segment
+        var nextRASP={}, delta={};
+        let parts=action.segment.split(',');
+        parts.forEach(p=>{
+            if(p==='G') delta.status='statusGreen';
+            else if(p==='Y') delta.status='statusYellow';
+            else if(p==='R') delta.status='statusRed';
+            else if(p==='a') delta.assetClass=this.props.portfolio.summary.assetClass;
+            else if(this.props.portfolio.assetClasses.includes(p)) delta.assetClass=p;
+            else return;
+            delta.shape='open';
+        })
+        Object.assign(nextRASP,initialRASP,delta);
+        this.calcSegment(nextRASP);
+        return {nextRASP, setBeforeWait: true};
+    }
+
+    calcSegment(nextRASP){
+        let parts=[];
+        if(nextRASP.status) parts.push(nextRASP.status[6]) // first letter of the color
+        if(nextRASP.assetClass && typeof nextRASP.assetClass!=='string') parts.push('a');
+        if(nextRASP.assetClass && typeof nextRASP.assetClass==='string') parts.push(nextRASP.assetClass);
+        if(parts.length) nextRASP.pathSegment=parts.join(',');
+        else nextRASP.pathSegment=null;
+    }
+
+    actionToState(action,rasp,source,initialRASP){
+        var nextRASP={}, delta={};
+        // if the immediate child of this list (an article) changes shape to open, 
+        // close all the other articles in the list, to focus on just this one.
+        // if the article changes out of open, then show the list again
+        if(action.type==="TOGGLE"){
+            if(['statusGreen','statusYellow','statusRed'].includes(action.column)){
+                if(rasp.status===action.column)
+                    delta.status=null; // untoggle the status filter
+                else
+                    delta.status=action.column;
+            }else if('assetClass'===action.column){
+                if(rasp.assetClass===action.value){
+                    if(typeof action.value!=='string') // a string is one asset class, a number is all asset classes, false it don't show asset classes
+                        delta.assetClass=null; // untoggle the assetClass filter
+                    else
+                        delta.assetClass=this.props.portfolio.summary.assetClass; // show all asset classes -- this will be a number
+                } else {
+                    delta.assetClass=action.value; 
+                }
+            }
+            // othewise we're clicking on a cell we don't have an action for so just ignore it by setting the state to what it was
+        } else
+            return null;
+        Object.assign(nextRASP,rasp,delta);
+        if(nextRASP.status || nextRASP.assetClass) nextRASP.shape='open';
+        else nextRASP.shape=initialRASP.shape;
+        this.calcSegment(nextRASP);
+        return nextRASP;
+    }
 
     static proxyGetEmptyObject={
         get: (obj, name)=>{
@@ -48,14 +118,14 @@ export class ShowPortfolio extends React.Component {
             "ytdReturnAboveCatOrInd": true,
             "percentChange": true,
             "1DayReturnAboveCatOrInd": true,
-            "percentTotalReturn1Week": true,
-            "1WeekReturnAboveCatOrInd": true,
-            "percentTotalReturn1Month": true,
-            "1MoReturnAboveCatOrInd": true,
-            "percentTotalReturn3Month": true,
-            "3MoReturnAboveCatOrInd": true,
-            "percentTotalReturn12Month": true,
-            "12MoReturnAboveCatOrInd": true,
+            "percentTotalReturn1Week": false,
+            "1WeekReturnAboveCatOrInd": false,
+            "percentTotalReturn1Month": false,
+            "1MoReturnAboveCatOrInd": false,
+            "percentTotalReturn3Month": false,
+            "3MoReturnAboveCatOrInd": false,
+            "percentTotalReturn12Month": false,
+            "12MoReturnAboveCatOrInd": false,
             "percentBelow52WeekHigh": true,
             "fundManagerTenure": false,
             "morningstarRatingForFunds": false,
@@ -63,8 +133,8 @@ export class ShowPortfolio extends React.Component {
             "analysisDate": false,
             "dateOfMostRecentPortfolio": false,
             "news": false,
-            "totalReturn2016": true,
-            "2016ReturnAboveCatind": true,
+            "totalReturn2016": false,
+            "2016ReturnAboveCatind": false,
             "statusGreen": true,
             "statusYellow": true,
             "statusRed": true,
@@ -116,47 +186,7 @@ export class ShowPortfolio extends React.Component {
             "US Bond": false,
             "Real Estate": false,
         },
-        statusGreen: {
-            "ticker": true,
-            "52WeekLow": false,
-            "dollarCurrentPrice": false,
-            "percentBelow52WeekHigh": false,
-            "dollarChange": false,
-            "percentChange": false,
-            "percentWeight": true,
-            "stockIndustryFundCategory": true,
-            "1DayReturnAboveCatOrInd": true,
-            "percentTotalReturn1Week": true,
-            "1WeekReturnAboveCatOrInd": true,
-            "percentTotalReturn1Month": true,
-            "1MoReturnAboveCatOrInd": true,
-            "percentTotalReturn3Month": true,
-            "3MoReturnAboveCatOrInd": true,
-            "percentTotalReturnYtd": true,
-            "ytdReturnAboveCatOrInd": true,
-            "percentTotalReturn12Month": true,
-            "12MoReturnAboveCatOrInd": true,
-            "fundManagerTenure": true,
-            "morningstarRatingForFunds": true,
-            "bearMarketPercentileRank": true,
-            "analysisDate": false,
-            "dateOfMostRecentPortfolio": false,
-            "news": false,
-            "totalReturn2016": true,
-            "2016ReturnAboveCatind": true,
-            "statusGreen": true,
-            "statusYellow": false,
-            "statusRed": false,
-            "assetClass": true,
-            "US Large-Cap Equity": false,
-            "US Mid-Cap Equity": false,
-            "US Small-Cap Equity": false,
-            "Foreign Equity": false,
-            "Foreign Bond": false,
-            "US Bond": false,
-            "Real Estate": false,
-        },
-        statusYellow: {
+        status: {
             "ticker": true,
             "52WeekLow": false,
             "dollarCurrentPrice": false,
@@ -185,7 +215,7 @@ export class ShowPortfolio extends React.Component {
             "totalReturn2016": true,
             "2016ReturnAboveCatind": true,
             "statusGreen": false,
-            "statusYellow": true,
+            "statusYellow": false,
             "statusRed": false,
             "assetClass": true,
             "US Large-Cap Equity": false,
@@ -195,13 +225,6 @@ export class ShowPortfolio extends React.Component {
             "Foreign Bond": false,
             "US Bond": false,
             "Real Estate": false,
-        },
-        statusRed: {
-            percentTotalReturnYtd: true,
-            ytdReturnAboveCatOrInd: true,
-            statusGreen: true,
-            statusYellow: true,
-            statusRed: true
         }
     }
 
@@ -215,17 +238,17 @@ export class ShowPortfolio extends React.Component {
         "percentChange": '1d',
         "percentWeight": 'weight',
         "stockIndustryFundCategory": 'Fund Category',
-        "1DayReturnAboveCatOrInd": '1d > Avg',
+        "1DayReturnAboveCatOrInd": '> Avg',
         "percentTotalReturn1Week": '1w',
-        "1WeekReturnAboveCatOrInd": '1w > Avg',
+        "1WeekReturnAboveCatOrInd": '> Avg',
         "percentTotalReturn1Month": '1m',
-        "1MoReturnAboveCatOrInd": '1m > Avg',
+        "1MoReturnAboveCatOrInd": '> Avg',
         "percentTotalReturn3Month": '3m',
-        "3MoReturnAboveCatOrInd": '3m > Avg',
+        "3MoReturnAboveCatOrInd": '> Avg',
         "percentTotalReturnYtd": 'YTD',
-        "ytdReturnAboveCatOrInd": 'YTD > Avg',
+        "ytdReturnAboveCatOrInd": '> Avg',
         "percentTotalReturn12Month": '12M',
-        "12MoReturnAboveCatOrInd": '12M > Avg',
+        "12MoReturnAboveCatOrInd": '> Avg',
         "fundManagerTenure": 'Tenure',
         "morningstarRatingForFunds": 'Morningstar',
         "bearMarketPercentileRank": 'Bear %',
@@ -233,11 +256,11 @@ export class ShowPortfolio extends React.Component {
         "dateOfMostRecentPortfolio": 'Portfolio Date',
         "news": 'news',
         "totalReturn2016": '2016',
-        "2016ReturnAboveCatind": '2016 > Avg',
+        "2016ReturnAboveCatind": '> Avg',
         "statusGreen": 'Green',
         "statusYellow": 'Yellow',
         "statusRed": 'Red',
-        "assetClass": 'Asset Class',
+        "assetClass": 'Asset Classes',
         "US Large-Cap Equity": "US Large-Cap Equity",
         "US Mid-Cap Equity": "US Mid-Cap Equity",
         "US Small-Cap Equity": "US Small-Cap Equity",
@@ -247,86 +270,11 @@ export class ShowPortfolio extends React.Component {
         "Real Estate": "Real Estate",
     }
 
-    toggleState(val,state){
-        this.setState(Object.assign({},{shape},val))
-    }
-
-    buttons ={
-        summary: {
-            statusYellow: ()=>this.setState({shape: 'statusYellow'}),
-            statusGreen: ()=>this.setState({shape:'statusGreen'}),
-            statusRed: ()=>this.setState({shape: 'statusRed'}),
-            assetClass: ()=>this.setState({shape: 'assetClass'})
-        },
-        assetClass: {
-            statusYellow: ()=>this.setState({shape: 'statusYellow'}),
-            statusGreen: ()=>this.setState({shape: 'statusGreen'}),
-            statusRed: ()=>this.setState({shape:'statusRed'}),
-            assetClass: (asset)=>this.setState({shape: 'showAsset', asset}),
-        },
-        showAsset: {
-            statusYellow: ()=>this.setState({shape: 'statusYellow'}),
-            statusGreen: ()=>this.setState({shape: 'statusGreen'}),
-            statusRed: ()=>this.setState({shape:'statusRed'}),
-            assetClass: (asset)=>this.setState({shape: 'assetClass', asset: null}),
-        },
-        statusYellow: {
-            statusYellow: ()=>this.setState({shape: 'summary'}),
-            statusGreen: ()=>this.setState({shape:'statusGreen'}),
-            statusRed: ()=>this.setState({shape: 'statusRed'}),
-            assetClass: (asset)=>this.setState({shape: 'assetClass'})
-        },
-        statusGreen: {
-            statusYellow: ()=>this.setState({shape: 'statusYellow'}),
-            statusGreen: ()=>this.setState({shape:'summary'}),
-            statusRed: ()=>this.setState({shape: 'statusRed'}),
-            assetClass: (asset)=>this.setState({shape: 'assetClass'})
-        },
-        statusRed: {
-            statusYellow: ()=>this.setState({shape: 'statusYellow'}),
-            statusGreen: ()=>this.setState({shape:'statusGreen'}),
-            statusRed: ()=>this.setState({shape: 'statusRed'}),
-            assetClass: (asset)=>this.setState({shape: 'assetClass'})
-        }
-    }
-
-    static shapeColumnButtonStyle={
-        summary: {
+    static columnButtonStyle={
             statusGreen: {color: 'white', backgroundColor: 'green'},
             statusYellow: {color: 'white', backgroundColor: 'orange'},
             statusRed: {color: 'white', backgroundColor: 'red'},
             assetClass: {color: 'white', backgroundColor: 'darkslategray'},
-        },
-        assetClass: {
-            statusGreen: {color: 'white', backgroundColor: 'green'},
-            statusYellow: {color: 'white', backgroundColor: 'orange'},
-            statusRed: {color: 'white', backgroundColor: 'red'},
-            assetClass: {color: 'white', backgroundColor: 'darkslategray'},
-        },
-        showAsset: {
-            statusGreen: {color: 'white', backgroundColor: 'green'},
-            statusYellow: {color: 'white', backgroundColor: 'orange'},
-            statusRed: {color: 'white', backgroundColor: 'red'},
-            assetClass: {color: 'white', backgroundColor: 'darkslategray'},
-        },
-        statusGreen: {
-            statusGreen: {color: 'white', backgroundColor: 'green'},
-            statusYellow: {color: 'white', backgroundColor: 'orange'},
-            statusRed: {color: 'white', backgroundColor: 'red'},
-            assetClass: {color: 'white', backgroundColor: 'darkslategray'},
-        },
-        statusYellow: {
-            statusGreen: {color: 'white', backgroundColor: 'green'},
-            statusYellow: {color: 'white', backgroundColor: 'orange'},
-            statusRed: {color: 'white', backgroundColor: 'red'},
-            assetClass: {color: 'white', backgroundColor: 'darkslategray'},
-        },
-        statusRed: {
-            statusGreen: {color: 'white', backgroundColor: 'green'},
-            statusYellow: {color: 'white', backgroundColor: 'orange'},
-            statusRed: {color: 'white', backgroundColor: 'red'},
-            assetClass: {color: 'white', backgroundColor: 'darkslategray'},
-        }
     }
 
     componentDidMount(){
@@ -347,25 +295,17 @@ export class ShowPortfolio extends React.Component {
         let row=0, col=0;
         for(row=0; row < tbody.children.length; row++){
             let cells=tbody.children[row];
-            //let height=cells.getBoundingClientRect().height;
-            //rowHeights.a.push(height);
-            //rowHeights[this.props.portfolio.rows[row]]=height;
-            //cells.style.maxHeight=height+'px';
             for(col=0; col<cells.children.length; col++){
                 cells.children[col].style.maxWidth='0px';
-                //cells.children[col].style.height='0px';
             }
         }
-        this.setState({headerWidths, shape: 'summary'});
+        this.setState({headerWidths});
     }
 
     render(){
-        const {portfolio}=this.props;
-        const {shape, asset}=this.state;
+        const {portfolio, rasp}=this.props;
         let rows=[];
-        var shapeColumnButtonStyle=new Proxy(ShowPortfolio.shapeColumnButtonStyle,ShowPortfolio.proxyGetEmptyObject);
-        var shapeColumnButtonOnClick=new Proxy(this.buttons,ShowPortfolio.proxyGetEmptyObject);
-        let v;
+        var columnButtonStyle=new Proxy(RASPShowPortfolio.columnButtonStyle,RASPShowPortfolio.proxyGetEmptyObject);
 
         var numberColor=(column, value)=>{
             if(typeof value !=='undefined' && value !== null){
@@ -381,35 +321,51 @@ export class ShowPortfolio extends React.Component {
 
         var rowStyle=(row)=>{
             if(!this.state.headerWidths.a) return {}; // render all the rows so that the row height can be calculated
-            if(shape==='summary' && row==='summary') return {lineHeight: '100%'}; 
-            if(row==='summary') return {lineHeight: '100%'};
-            if(['statusYellow', 'statusGreen', 'statusRed'].includes(shape))
-                return {lineHeight: this.props.portfolio.a[row][shape] ? '100%' : '0%'};
-            if(shape==='showAsset' && asset===portfolio.a[row]['assetClass']) return {lineHeight: '100%'}
+            if((row==='summary')
+            || ((rasp.status && portfolio.a[row][rasp.status])&&!rasp.assetClass)
+            || ((rasp.status && portfolio.a[row][rasp.status])&& rasp.assetClass ==='string' && rasp.assetClass === portfolio.a[row]['assetClass'])
+            || (rasp.assetClass && typeof rasp.assetClass ==='string' && rasp.assetClass === portfolio.a[row]['assetClass']) 
+            || (rasp.assetClass && typeof rasp.assetClass !=='string' && portfolio.assetClasses.includes(row)) 
+            ){
+                var obj={lineHeight: '100%'};
+                if(portfolio.assetClasses.includes(row)) obj.backgroundColor='lightgray';
+                if(row==='summary') obj.backgroundColor='#c5cae9';
+                return obj;
+            }
             return {lineHeight: '0%'};
+        }
+
+        var showColumn=(column)=>{
+            return (
+                (RASPShowPortfolio.tableShape['summary'][column]) // summary is always shown
+            ||  (rasp.status && RASPShowPortfolio.tableShape['status'][column])
+            ||  (rasp.status && rasp.status===column)// show the corresponding status column even though its false in the table
+            ||  (rasp.assetClass && typeof rasp.assetClass!=='string' && RASPShowPortfolio.tableShape['assetClass'][column])
+            ||  (rasp.assetClass && typeof rasp.assetClass==='string' && RASPShowPortfolio.tableShape['showAsset'][column])
+            ) 
         }
 
         var columnStyle=(column)=>{
             if(!this.state.headerWidths.a) return {display: 'table-cell'}; // render all the rows so that the row width can be calculated
-            if(ShowPortfolio.tableShape[shape] && ShowPortfolio.tableShape[shape][column]) return {maxWidth: null};
+            if(showColumn(column)) return {maxWidth: null};
             else return {maxWidth: '0px'}
         }
 
         var headerStyle=(column)=>{
             if(!this.state.headerWidths.a) return {display: 'table-cell'}; // render all the rows so that the row width can be calculated
-            if(ShowPortfolio.tableShape[shape] && ShowPortfolio.tableShape[shape][column]) return {maxWidth: this.state.headerWidths[column]+'px'};
-            return {maxWidth: '0px'}
+            if(showColumn(column)) return {maxWidth: this.state.headerWidths[column]+'px'};
+            else return {maxWidth: '0px'}
         }
-        
+
         let header= (
             <thead>
                 <tr ref='header' key='header' className='portfolio-head-row'>
                     {   portfolio.columns.map(c=>
-                            <th className='portfolio-column-head' style={headerStyle(c)}
+                            <th key={c} className='portfolio-column-head' style={headerStyle(c)}
                                 title={S(c).humanize().s}
                             >
                                 <div className='wa-table-header-cell'>
-                                    {ShowPortfolio.shortHead[c] ? ShowPortfolio.shortHead[c] : c}
+                                    {RASPShowPortfolio.shortHead[c] ? RASPShowPortfolio.shortHead[c] : c}
                                 </div>
                             </th>
                         )
@@ -419,8 +375,8 @@ export class ShowPortfolio extends React.Component {
         );
         rows.push(
             <tr key='summary' style={rowStyle('summary')} >{portfolio.columns.map(c=>
-                <td style={Object.assign({},{color: numberColor(c, portfolio.summary[c])},shapeColumnButtonStyle[shape][c]) }
-                    onClick={(v=shapeColumnButtonOnClick[shape][c],v?v.bind(this,portfolio.summary[c] || ''):null)}
+                <td style={Object.assign({},{color: numberColor(c, portfolio.summary[c])},columnButtonStyle[c]) }
+                    onClick={()=>rasp.toParent({type: "TOGGLE", row: 'summary', column: c, value: portfolio.summary[c]|| ''})}
                 >
                     <div className='wa-table-row-cell'>
                         {(typeof portfolio.summary[c] !=='undefined' && portfolio.summary[c] !== null) ? portfolio.summary[c].toLocaleString(navigator.language,portfolio.formats[c] ? portfolio.formats[c].options : {}) : ''}
@@ -428,30 +384,30 @@ export class ShowPortfolio extends React.Component {
                 </td>
             )}</tr>
         );
-        rows=rows.concat(portfolio.rows.map(r=>
-            <tr key={portfolio.a[r]['ticker']} style={rowStyle(r)} >{
-                portfolio.columns.map(c=>
-                    <td style={Object.assign({},{color: numberColor(c, portfolio.a[r][c])}, columnStyle(c))}>
-                        <div className='wa-table-row-cell' onClick={(v=shapeColumnButtonOnClick[shape][c],v?v.bind(this,portfolio.a[r][c] || ''):null)} style={shapeColumnButtonStyle[shape][c]}>
-                            {(typeof portfolio.a[r][c] !=='undefined' && portfolio.a[r][c] !== null) ? portfolio.a[r][c].toLocaleString(navigator.language,portfolio.formats[c] ? portfolio.formats[c].options : {}) : ''}
-                        </div>
-                    </td>
-                )
-            }</tr>
-        ));
         rows=rows.concat(portfolio.assetClasses.map(r=>
-            <tr key={r} style={{lineHeight: ['all','assetClass'].includes(shape) || (shape==='showAsset' && asset===portfolio.a[r]['assetClass'])  ? '100%' : '0'}} >{
+            <tr key={r} style={rowStyle(r)} >{
                 portfolio.columns.map(c=>
                     <td style={Object.assign({},{color: numberColor(c, portfolio.a[r][c])}, columnStyle(c))}>
-                        <div className='wa-table-row-cell' onClick={(v=shapeColumnButtonOnClick[shape][c],v?v.bind(this,portfolio.a[r][c] || ''):null)} style={shapeColumnButtonStyle[shape][c]}>
+                        <div className='wa-table-row-cell' onClick={()=>rasp.toParent({type: "TOGGLE", row: r, column: c, value: portfolio.a[r][c]|| ''})} style={columnButtonStyle[c]}>
                             {(typeof portfolio.a[r][c] !=='undefined' && portfolio.a[r][c] !== null) ? portfolio.a[r][c].toLocaleString(navigator.language,portfolio.formats[c] ? portfolio.formats[c].options : {}) : ''}
                         </div>
                     </td>
                 )
             }
             </tr>
-        ))
-        
+        ));
+        rows=rows.concat(portfolio.rows.map(r=>
+            <tr key={portfolio.a[r]['ticker']} style={rowStyle(r)} >{
+                portfolio.columns.map(c=>
+                    <td style={Object.assign({},{color: numberColor(c, portfolio.a[r][c])}, columnStyle(c))}>
+                        <div className='wa-table-row-cell' onClick={()=>rasp.toParent({type: "TOGGLE", row: r, column: c, value: portfolio.a[r][c]|| ''})} style={columnButtonStyle[c]}>
+                            {(typeof portfolio.a[r][c] !=='undefined' && portfolio.a[r][c] !== null) ? portfolio.a[r][c].toLocaleString(navigator.language,portfolio.formats[c] ? portfolio.formats[c].options : {}) : ''}
+                        </div>
+                    </td>
+                )
+            }</tr>
+        ));
+
         return(
             <table className='wa-table'>
                 {header}
