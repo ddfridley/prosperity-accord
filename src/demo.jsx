@@ -60,7 +60,7 @@ class RASPLanding extends ReactActionStatePathClient{
         Object.assign(nextRASP,initialRASP,delta);
         if(nextRASP.key) nextRASP.shape='open'
         if(nextRASP.key) nextRASP.pathSegment=key;
-        return {nextRASP, setBeforeWait: true};
+        return {nextRASP, setBeforeWait: false};
     }
 
     actionToState(action,rasp,source,initialRASP){
@@ -87,67 +87,77 @@ class RASPLanding extends ReactActionStatePathClient{
     render(){
         const {rasp}=this.props;
         return (
-            <div className="wa-landing">
-                <Accordion active={rasp.shape!=='open'}>
+            <section>
+                <div className="wa-landing">
                     <Boxes className='wa-top-box'>
                             <div className='wa-intro-wrapper'>
-                                <div className='wa-intro-logo'>
+                                <div className='wa-intro-logo' style={{position: rasp.shape!=='open'?"absolute":"relative"}}>
                                     <img src="images/Prosperity Accord Logo.png" height={window.fontSize * 4 + 'px'} />
-                                    <div>For Confidence in Your Invenstment Management</div>
+                                    <div>For Peace of Mind in Your Invenstment Portfolio</div>
                                 </div>
-                                <img className='wa-intro-logo-bg' src="images/at table floor.png" width="100%" style={{display: "block"}}/>
+                                <img className='wa-intro-logo-bg' src="images/at table floor.png" width="100%" style={{display: rasp.shape!=='open'?"block":"none"}}/>
                             </div>
-                            <div  className='wa-intro-image'>
+                            <div  className='wa-intro-image' style={{display: rasp.shape!=='open'?"block":"none"}}>
                                 <img src="images/at table.png" width="100%" />
                             </div>
                     </Boxes>
-                    <div className='wa-top-line'>
-                        <h1>Why Use Prosperity Accord?</h1>
-                    </div>
-                    <Boxes className="wa-whys-boxes">
-                        <Stacks className="wa-why-stacks">
-                            <i className="fa fa-eye fa-2x" />
-                            <div>
-                                <h2>See how you are really doing</h2>
-                                <p>Whether the market is up or down, today, this week, this month, or this year see how your whole portfolio, across all your accounts, is doing compared to benchmarks.</p>
-                                <p>Many high priced wealth managers give you a number, but they don't tell you if that's better or worse than someone else.</p>
-                                <p>We want to know, and show you, how we're doing compared to other choices.</p>
-                        </div>      
-                        </Stacks>
-                        <Stacks className="wa-why-stacks">
-                            <i className="fa fa-sliders fa-2x"/>
-                            <div>
-                                <h2>Manage your savings across many accounts</h2>
-                                <p>You and your spouse have 401k's with your employers, IRA's with more than one brokerage, and maybe even a joint brokerage account. Easily choose the best funds and asset allocation given your choices, then see and manage your portfolio across all these accounts.</p>
-                                <p>Many high priced wealth managers want all your money in their account.</p>
-                                <p>We think putting all your eggs in one basket is a risky strategy. </p>
-                            </div>
-                        </Stacks>
-                        <Stacks className="wa-why-stacks">
-                            <i className="fa fa-balance-scale fa-2x" />
-                            <div>
-                                <h2>Our Interests Are Aligned</h2>
-                                <p>Our fees are a lot lower, and based on how much money you make, and there is no charge in any month when you don't make money.</p>
-                                <p>Many high priced wealth managers charge you based on the total value of your portfolio. So, they make money even when you lose money. Their interests are not aligned with yours.</p>
-                                <p>Ours are. We will be working to make sure you make as much money as possible and that you don't lose money. </p>
-                            </div>
-                        </Stacks>
-                    </Boxes>
-                    <div className={'wa-mailchimp-'+window.orientation}>
-                        <h2>Try the demo</h2>
-                        <p>No account info required.</p>
-                        <MailChimpForm />
-                    </div>
-                </Accordion>
+                    <Accordion active={rasp.shape!=='open'}>
+                        <div className='wa-top-line'>
+                            <h1>Why Use Prosperity Accord?</h1>
+                        </div>
+                        <Boxes className="wa-whys-boxes">
+                            <Stacks className="wa-why-stacks">
+                                <i className="fa fa-eye fa-2x" />
+                                <div>
+                                    <h2>See how you are really doing</h2>
+                                    <p>Whether the market is up or down, today, this week, this month, or this year see how your whole portfolio, across all your accounts, is doing compared to benchmarks.</p>
+                                    <p>Many high priced wealth managers give you a number, but they don't tell you if that's better or worse than someone else.</p>
+                                    <p>We want to know, and show you, how we're doing compared to other choices.</p>
+                            </div>      
+                            </Stacks>
+                            <Stacks className="wa-why-stacks">
+                                <i className="fa fa-sliders fa-2x"/>
+                                <div>
+                                    <h2>Manage your savings across many accounts</h2>
+                                    <p>You and your spouse have 401k's with your employers, IRA's with more than one brokerage, and maybe even a joint brokerage account. Easily choose the best funds and asset allocation given your choices, then see and manage your portfolio across all these accounts.</p>
+                                    <p>Many high priced wealth managers want all your money in their account.</p>
+                                    <p>We think putting all your eggs in one basket is a risky strategy. </p>
+                                </div>
+                            </Stacks>
+                            <Stacks className="wa-why-stacks">
+                                <i className="fa fa-balance-scale fa-2x" />
+                                <div>
+                                    <h2>Our Interests Are Aligned</h2>
+                                    <p>Our fees are a lot lower, and based on how much money you make, and there is no charge in any month when you don't make money.</p>
+                                    <p>Many high priced wealth managers charge you based on the total value of your portfolio. So, they make money even when you lose money. Their interests are not aligned with yours.</p>
+                                    <p>Ours are. We will be working to make sure you make as much money as possible and that you don't lose money. </p>
+                                </div>
+                            </Stacks>
+                        </Boxes>
+                        <div className={'wa-top-line-'+window.orientation}>
+                            <h1>A Quick View into Your Whole Portfolio</h1>
+                            <p> See your whole portfollio, summarized into one small table. See how it's going year to date, how much better than average it is, how it went <u>today</u> compared to average and how many funds are meeting expectations (green), of concern (yellow), or have fallen below expectations (red).</p>
+                            <p> With one quick look, in a few seconds you can have peace of mind that all is well. Or, you don't have to look at all because you will be notified when something needs your attention.</p>
+                            <h2><i className="fa fa-hand-o-right"/>Click on it to see more</h2>
+                        </div>
+                    </Accordion>
+                </div>
                 <div style={{clear: 'both'}}>
                     <center>
                         <ShowPortfolio portfolio={portfolio} rasp={Object.assign({},rasp, {shape: 'truncated', toParent: this.toMeFromChild.bind(this,'1')})}/>
                     </center>
                 </div>
-                <div >
+                <div className={"wa-landing-"+window.orientation}>
+                    <div className={'wa-mailchimp-'+window.orientation}>
+                            <h2>Try the demo</h2>
+                            <p>No account info required.</p>
+                            <MailChimpForm />
+                    </div>
+                </div>
+                <div style={{clear: "both"}}>
                     <center>Copyright &copy;2017 All rights reserved</center>
                 </div>
-            </div>
+            </section>
         );
     }
 }

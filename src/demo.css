@@ -1,7 +1,21 @@
 
 
 .wa-landing {
-    margin: 5em;
+    background: white;
+    max-width: 980px;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+.wa-landing-landscape {
+    background: white;
+    max-width: 980px;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+.wa-landing-portrait {
+    margin-left: 1em!important;
     background: white;
     max-width: 980px;
     margin: auto;
@@ -88,7 +102,7 @@
 }
 
 .wa-mailchimp-landscape{
-    width: 40%;
+    max-width: 50em;
     float: right;
 }
 
@@ -128,6 +142,8 @@
     border-spacing: 0;
     border-collapse: collapse;
     box-sizing: border-box;
+    border: solid 3px black;
+    font-size: 115%;
 }
 
 .wa-table td {
@@ -164,8 +180,115 @@
     text-align: center;
 }   
 
+.wa-table-header-cell.wa-table-sort-up{
+    text-decoration: underline;
+}
+
+.wa-table-header-cell.wa-table-sort-down{
+    text-decoration: overline;
+}
+
 .wa-table-row-cell {
     padding-left: .2em;
     padding-right: .2em;
 }
 
+.wa-table-row-cell.wa-button-active{
+    box-shadow: inset 1px 1px 3px 3px #D1C4E9;
+    border: solid 1px black;
+    border-radius: 5px;
+}
+
+.wa-top-line-landscape h1{
+    vertical-align: middle;
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin: 0;
+}
+
+.wa-top-line-landscape h2 i{
+    color: #0070c0;
+    padding-right: 0.5em;
+}
+
+.wa-top-line-portrait h1{
+    vertical-align: middle;
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin: 0;
+}
+
+.wa-top-line-portrait h2 i{
+    color: #0070c0;
+    padding-right: 0.5em;
+    padding-left: 1em;
+}
+
+.wa-top-line-portrait p {
+    padding-left: 3em;
+    padding-right: 1em;
+}
+
+.wa-table-button {
+    padding-left: 1em;
+    padding-right: 1em;
+    background-color: #0070c0;
+    color: white;
+    vertical-align: top;
+}
+
+.wa-table-button.wa-button-active {
+    box-shadow: inset 1px 1px 3px 3px #D1C4E9;
+    border: solid 1px black;
+    border-radius: 5px;
+    color: white;
+    background-color: darkslategray;
+}
+
+wa-table-date{
+    font-size: .5em;
+}
+
+/** from react-proactive-accordion */
+.accordion {
+    overflow: hidden;
+    max-height: 0;
+    position: relative;
+  
+  }
+  
+  .accordion.expanding {
+      overflow: hidden;
+  }
+  
+  .accordion.text.expanding {
+    overflow: visible;
+    overflow-y: hidden;
+  }
+  
+  .accordion.expanded {
+      max-height: none;
+      /* overflow nothing */
+  }
+  
+  .accordion.text.expanded {
+      max-height: none;
+      overflow: visible;
+  }
+  
+  .accordion.collapsing {
+    overflow: hidden;
+  }
+  
+  .accordion.text.collapsing {
+    overflow: visible;
+    overflow-y: hidden;
+  }
+  
+  .accordion.collapsed {
+    overflow: hidden;
+  }
+  
+  .accordion.text.collapsed {
+    overflow: hidden;
+  }
