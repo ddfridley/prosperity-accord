@@ -50,6 +50,7 @@ class RASPLanding extends ReactActionStatePathClient{
         super(props,'key',1) // the key is [open]. If a subcomponent is selected, this.child['open'] is the child to send actions to.  debug level is 1
         this.title = 'Landing'; 
         this.props.rasp.toParent({ type: "SET_TITLE", title: this.title }); // used in debug messages
+        this.props.rasp.child=this.childRASP;
     }
 
     segmentToState(action,initialRASP){
@@ -82,6 +83,12 @@ class RASPLanding extends ReactActionStatePathClient{
         if(nextRASP.key) nextRASP.pathSegment=nextRASP.key;
         else nextRASP.pathSegment=null;
         return nextRASP;
+    }
+
+    childRASP(shape, childKey){
+        return(
+            Object.assign({},this.props.rasp, {shape, toParent: this.toMeFromChild.bind(this,childKey)})
+        );
     }
 
     render(){
@@ -144,7 +151,7 @@ class RASPLanding extends ReactActionStatePathClient{
                 </div>
                 <div style={{clear: 'both'}}>
                     <center>
-                        <ShowPortfolio portfolio={portfolio} rasp={Object.assign({},rasp, {shape: 'truncated', toParent: this.toMeFromChild.bind(this,'1')})}/>
+                        <ShowPortfolio portfolio={portfolio} rasp={this.childRASP('truncated', '1')}/>
                     </center>
                 </div>
                 <div className={"wa-landing-"+window.orientation}>

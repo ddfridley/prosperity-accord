@@ -576,7 +576,7 @@ class RASPShowPortfolio extends ReactActionStatePathClient {
                         </tbody>
                     </table>
                     <div className='wa-table-date'>
-                        {'as of '+Date(portfolio.latModifiedDate)}
+                        {'as of '+new Date(portfolio.lastModifiedDate)}
                     </div>
                 </div>
                 <div style={{display: 'inline-block', verticalAlign: 'top'}}>
