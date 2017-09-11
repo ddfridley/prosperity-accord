@@ -91,12 +91,17 @@ class RASPShowPortfolio extends ReactActionStatePathClient {
             if(RASPShowPortfolio.Statuses.includes(action.column)&&action.row==='summary'){ 
                 if(rasp.status===action.column)
                     delta.status=null; // untoggle the status filter
-                else
+                else {
                     delta.status=action.column;
+                    delta.assetClass=null;
+                }
             }else if('assetClass'===action.column){
                 if('summary'===action.row){
                     if(rasp.assetClass) delta.assetClass=null;
-                    else delta.assetClass=this.props.portfolio.summary.assetClass;
+                    else { 
+                        delta.assetClass=this.props.portfolio.summary.assetClass;
+                        delta.status=null;
+                    }
                 } else if(rasp.assetClass===action.value){
                     if(typeof action.value!=='string') // a string is one asset class, a number is all asset classes, false it don't show asset classes
                         delta.assetClass=null; // untoggle the assetClass filter
