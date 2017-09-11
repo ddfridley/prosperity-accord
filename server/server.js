@@ -17,6 +17,12 @@ app.get('/', function(request, response) {
   response.redirect('/demo.html');
 });
 
+app.get('/*', (request, response)=>{
+  console.info("Unexpected URL: ", request.protocol + '://'+ request.get('host')+ request.originalUrl);
+  console.info("From:", request.headers['x-forwarded-for'] || request.connection.remoteAddress);
+  response.redirect('/demo.html');
+});
+
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
