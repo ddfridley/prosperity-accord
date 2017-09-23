@@ -2,3 +2,4 @@
 /dist/*
 .vscode
 Thumbs.db
+_netrc
