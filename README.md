@@ -2,8 +2,9 @@
 # prosperity-accord
 We need a quick and easy way to look at our retirement/investment portfolio that shows us how we are doing relative to some bench mark.
 
-
 ## Demo
+This demo uses react-action-state-path for state and path management, and react-proactive-accordion for smooth opening and closing of the table and rows.
+
 http://prosperityaccord.herokuapp.com
 
 
