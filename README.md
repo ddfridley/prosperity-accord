@@ -4,7 +4,7 @@ We need a quick and easy way to look at our retirement/investment portfolio that
 
 
 ## Demo
-http://prosperity-accord.herokuapp.com
+http://prosperityaccord.herokuapp.com
 
 
 If you git fork https://github.com/ddfridley/prosperity-accord you can open the file dist/demo/demo.html with your browser and it will work. (Tested on windows with edge and chrome). You can also run 
