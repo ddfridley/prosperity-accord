@@ -8,4 +8,5 @@ cp src/demo.css dist/demo &&
 cp node_modules/react-table/react-table.css dist/demo &&
 cp -r assets/images dist/demo && 
 cp -r assets/favicon dist/demo/favicon
+echo "window.mailChimpUser=$MAIL_CHIMP_USER; window.mailChimpId=$MAIL_CHIMP_ID" > dist/config.js
 

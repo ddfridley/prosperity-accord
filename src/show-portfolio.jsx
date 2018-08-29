@@ -527,7 +527,7 @@ class RASPShowPortfolio extends ReactActionStatePathClient {
                             <th key={c} className='portfolio-column-head' style={headerStyle(c)}
                                 title={S(c).humanize().s}
                             >
-                                <div className={ClassNames('wa-table-header-cell',{'wa-table-sort-up': (rasp.columnSort===c && rasp.sortDirection) ? true : false, 'wa-table-sort-down': (rasp.columnSort===c && !rasp.sortDirection) ? true : false})} onClick={()=>rasp.toParent({type: "SORT", column: c})}>
+                                <div className={ClassNames('wa-table-header-cell',{'wa-table-sort-up': (rasp.columnSort===c && rasp.sortDirection) ? true : false, 'wa-table-sort-down': (rasp.columnSort===c && !rasp.sortDirection) ? true : false}, "clickable")} onClick={()=>rasp.toParent({type: "SORT", column: c})}>
                                     {RASPShowPortfolio.shortHead[c] ? RASPShowPortfolio.shortHead[c] : c}
                                 </div>
                             </th>
@@ -538,7 +538,7 @@ class RASPShowPortfolio extends ReactActionStatePathClient {
         );
         rows.push(
             <tr key='summary' style={rowStyle('summary')} >{portfolio.columns.map(c=>
-                <td key={c} style={Object.assign({},{maxWidth: '0px'}, {color: numberColor(c, portfolio.summary[c])},columnButtonStyle('summary',c,portfolio.summary[c] || '')) }
+                <td key={c} style={Object.assign({},{maxWidth: '0px'}, {color: numberColor(c, portfolio.summary[c])},columnButtonStyle('summary',c,portfolio.summary[c] || '')) } className="clickable"
                     onClick={()=>rasp.toParent({type: "TOGGLE", row: 'summary', column: c, value: portfolio.summary[c]|| ''})}
                 >
                     <div className={'wa-table-row-cell'+buttonPressedClass('summary',c,portfolio.summary[c] || '')}>
@@ -551,7 +551,7 @@ class RASPShowPortfolio extends ReactActionStatePathClient {
             <tr key={r} style={rowStyle(r)} >{
                 portfolio.columns.map(c=>
                     <td key={c} style={Object.assign({},{maxWidth: '0px'},{color: numberColor(c, portfolio.a[r][c])}, columnStyle(c))}>
-                        <div className={'wa-table-row-cell'+buttonPressedClass(r,c,portfolio.a[r][c] || '')} onClick={()=>rasp.toParent({type: "TOGGLE", row: r, column: c, value: portfolio.a[r][c]|| ''})} style={columnButtonStyle(r,c,portfolio.a[r][c] || '')}>
+                        <div className={ClassNames('wa-table-row-cell'+buttonPressedClass(r,c,portfolio.a[r][c] || ''), "clickable")} onClick={()=>rasp.toParent({type: "TOGGLE", row: r, column: c, value: portfolio.a[r][c]|| ''})} style={columnButtonStyle(r,c,portfolio.a[r][c] || '')}>
                             {cellValue(r,c)}
                         </div>
                     </td>
@@ -563,7 +563,7 @@ class RASPShowPortfolio extends ReactActionStatePathClient {
             <tr key={portfolio.a[r]['ticker']} style={rowStyle(r)} >{
                 portfolio.columns.map(c=>
                     <td key={c} style={Object.assign({},{maxWidth: '0px'},{color: numberColor(c, portfolio.a[r][c])}, columnStyle(c))}>
-                        <div className={'wa-table-row-cell'+buttonPressedClass(r,c,portfolio.a[r][c] || '')} onClick={()=>rasp.toParent({type: "TOGGLE", row: r, column: c, value: portfolio.a[r][c]|| ''})} style={columnButtonStyle(r,c,portfolio.a[r][c] || '')}>
+                        <div className={ClassNames('wa-table-row-cell'+buttonPressedClass(r,c,portfolio.a[r][c] || ''),"clickable")} onClick={()=>rasp.toParent({type: "TOGGLE", row: r, column: c, value: portfolio.a[r][c]|| ''})} style={columnButtonStyle(r,c,portfolio.a[r][c] || '')}>
                             {cellValue(r,c)}
                         </div>
                     </td>
@@ -585,8 +585,8 @@ class RASPShowPortfolio extends ReactActionStatePathClient {
                     </div>
                 </div>
                 <div style={{display: 'inline-block', verticalAlign: 'top'}}>
-                    <div style={{display: rasp.shape==='open'?'block':'none'}} className={ClassNames('wa-table-button',{'wa-button-active': rasp.details})} onClick={()=>rasp.toParent({type: "TOGGLE_DETAILS"})}>Details</div>
-                    <div style={{display: rasp.shape==='open'?'block':'none', backgroundColor: '#5b9bd5'}} className='wa-table-button' onClick={()=>rasp.toParent({type: "RESET"})}>Reset</div>
+                    <div style={{display: rasp.shape==='open'?'block':'none'}} className={ClassNames('wa-table-button',{'wa-button-active': rasp.details},"clickable")} onClick={()=>rasp.toParent({type: "TOGGLE_DETAILS"})}>Details</div>
+                    <div style={{display: rasp.shape==='open'?'block':'none', backgroundColor: '#5b9bd5'}} className={ClassNames('wa-table-button', 'clickable')} onClick={()=>rasp.toParent({type: "RESET"})}>Reset</div>
                 </div>
             </section>
         )

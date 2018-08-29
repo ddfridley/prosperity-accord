@@ -292,3 +292,7 @@ wa-table-date{
   .accordion.text.collapsed {
     overflow: hidden;
   }
+
+  .clickable:hover {
+      cursor: pointer;
+  }
